@@ -7,8 +7,8 @@ module.exports = {
     login: async (req, res) => {
         try {
             const user = await Service.findByEmailAndPassword(req.body.email, req.body.password)
-            var token = jwt.sign({ user: user, role: 'user' }, config.secret, { expiresIn: '1h' })
             delete user._doc.password;
+            var token = jwt.sign({ user: user, role: 'user' }, config.secret, { expiresIn: '1h' })
             res.status(200).send({ "user": user, "token": token, "status": "OK" });
         } catch (err) {
             if (err.status)
