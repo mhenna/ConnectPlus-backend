@@ -1,0 +1,6 @@
+<nz-spin *ngIf="loading" nzTip="Loading...">
+    <h2>{{email}} has been verified</h2>
+</nz-spin>
+
+<h2 *ngIf="success">{{email}} has been verified</h2>
+<h2 *ngIf="!success">ERROR: {{email}} has not been verified</h2>

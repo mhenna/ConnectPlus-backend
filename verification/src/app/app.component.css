@@ -1,0 +1,74 @@
+:host {
+    display: flex;
+    flex: 1;
+    min-height: 100%;
+    width: 100%;
+}
+
+nz-header {
+    background-color: #007DB8;
+    z-index: 2;
+    width: 100%;
+    padding: 0;
+}
+
+.connectplus {
+    float: left;
+    width: 15%;
+    margin-left: 2%;
+    height: 100%;
+    align-items: center;
+    display: flex;
+}
+
+.cp {
+    width: 100%;
+}
+
+.layout {
+    max-width: 100%;
+}
+
+.dell-content {
+    flex-direction: row;
+    display: flex;
+    flex: 1;
+    float: right;
+    margin-right: 2%;
+}
+
+.dell-title-div {
+    width: 50%;
+}
+
+.img-div {
+    width: 50%;
+}
+
+.dell-title {
+    font-size: 12pt;
+    width: fit-content;
+    color: white;
+    float: right;
+    margin-right: 5%;
+}
+
+.dell-logo {
+    max-width: 220px;
+    width: 100%;
+    max-height: 27pt;
+    height: 25%;
+}
+
+nz-footer {
+    background-color: #007DB8;
+    z-index: 2;
+    display: flex;
+    justify-content: center;
+}
+
+.footer-text {
+    width: fit-content;
+    color: white;
+    font-size: 90%;
+}
