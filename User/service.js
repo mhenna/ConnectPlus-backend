@@ -23,7 +23,31 @@ async function findByEmailAndPassword(email, password) {
     }
 }
 
+async function findByEmail(email) {
+    try {
+        let user = await User.findOne({ email: email });
+        if (!user)
+            throw ({ status: 404, message: 'User not found' })
+        return user;
+    } catch (err) {
+        throw (err);
+    }
+}
+
+async function verifyEmail(code) {
+    try {
+        let user = await User.updateOne({ code: code }, { $set: { verified: true } }, { new: true });
+        if (!user)
+            throw ({ status: 404, message: 'User with this email does not exist' });
+        return user;
+    } catch (err) {
+        throw (err);
+    }
+}
+
 module.exports = {
     save,
-    findByEmailAndPassword
+    findByEmailAndPassword,
+    findByEmail,
+    verifyEmail
 }

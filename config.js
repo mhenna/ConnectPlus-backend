@@ -3,6 +3,6 @@ module.exports = {
     resetSecret: 'TechD3V',
     hostUrl: 'http://localhost:3300',
     publicRoutes: [
-        '/user/register', '/user/login'
+        '/user/register', '/user/login', /^\/user\/verify\/.*/
     ]
 };
