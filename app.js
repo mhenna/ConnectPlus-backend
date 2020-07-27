@@ -9,19 +9,22 @@ const cors = require('cors');
 const config = require('./config');
 const port = process.env.PORT;
 const userPath = require('./User/router');
+const offerPath = require('./Offer/router');
+const offerCategoryPath = require('./OfferCategory/router');
 
 
 app.use(bodyParser.json({ limit: '160mb', extended: true }));
 app.use(cors());
 app.use(expressjwt({ secret: config.secret, algorithms: ['RS256'] }).unless({ path: config.publicRoutes }));
 app.use('/user', userPath);
+app.use('/offers', offerPath);
+app.use('/offerCategories', offerCategoryPath)
 
 app.use(function (err, req, res, next) {
     res.setHeader("Access-Control-Allow-Origin", "*");
     res.setHeader("Access-Control-Allow-Credentials", "true");
     res.setHeader("Access-Control-Allow-Methods", "GET,HEAD,OPTIONS,POST,PUT,DELETE");
     res.setHeader("Access-Control-Allow-Headers", "Access-Control-Allow-Headers, Origin,Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers");
-
     if (err.name === 'UnauthorizedError') {
         res.status(401).send({ message: 'Unauthorized' });
         return
@@ -46,5 +49,6 @@ process.once('SIGUSR2', function () {
 })
 
 module.exports = {
-    app
+    app,
+    mongoose
 };
