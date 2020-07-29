@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 require('./OfferModel');
 const Offer = mongoose.model('Offer');
+const Utils = require('../utils');
 
 async function save(offer) {
     try {
@@ -23,7 +24,36 @@ async function findByName(name) {
     }
 }
 
+async function uploadLogo(file, filename, extension) {
+    const { LogosBucket } = await require('../app');
+
+    let x = new Promise((resolve, reject) => {
+        Utils.uploadFile(LogosBucket, file, filename, extension, function onFinish(f) {
+            resolve(f);
+        })
+    });
+    
+    let logoData = await Promise.resolve(x);
+    return logoData;
+}
+
+
+async function retrieveLogo(id) {
+    const { LogosBucket } = await require('../app');
+
+    let x = new Promise((resolve, reject) => {
+        Utils.retrieveFile(LogosBucket, id, function onFinish(f, metadata) {
+            let file = { metadata: metadata, fileData: f };
+            resolve(file);
+        });
+    })
+    let logo = await Promise.resolve(x);
+    return logo;
+}
+
 module.exports = {
     save,
-    findByName
+    findByName,
+    uploadLogo,
+    retrieveLogo,
 }

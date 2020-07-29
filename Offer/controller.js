@@ -1,4 +1,5 @@
 const Service = require('./service');
+
 module.exports = {
 
     addOffer: async (req, res) => {
@@ -29,6 +30,20 @@ module.exports = {
                 res.status(err.status).send(err.message);
             else
                 res.status(500).send(`Unexpected error occured: ${err}`);
+        }
+    },
+
+    testUpload: async (req, res) => {
+        let logo = await Service.uploadLogo(req.files.file, req.body.title, 'txt')
+        res.status(200).send(logo);
+    },
+
+    testRetrieve: async (req, res) => {
+        try {
+            let logo = await Service.retrieveLogo(req.query.id);
+            res.status(200).send({ logo });
+        } catch (err) {
+            console.log(err);
         }
     }
 }
