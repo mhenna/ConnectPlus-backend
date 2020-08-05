@@ -23,7 +23,7 @@ const OfferSchema = new mongoose.Schema({
         unique: true
     },
     logo: {
-        type: mongoose.SchemaTypes.ObjectId,
+        type: mongoose.Schema.Types.ObjectId,
     }
 });
 
