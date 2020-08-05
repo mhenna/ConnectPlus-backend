@@ -12,6 +12,7 @@ const port = process.env.PORT;
 const userPath = require('./User/router');
 const offerPath = require('./Offer/router');
 const offerCategoryPath = require('./OfferCategory/router');
+const e = require('express');
 
 
 app.use(bodyParser.json({ limit: '160mb', extended: true }));
@@ -46,12 +47,16 @@ process.once('SIGUSR2', function () {
 })
 
 module.exports = (async function () {
-    let conn = await mongoose.createConnection(process.env.MONGO_URL,
-        { useNewUrlParser: true, useUnifiedTopology: true });
+    let conn = await mongoose.connect(process.env.MONGO_URL,
+        { useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex: true }, (err) => {
+            if (err)
+                console.log(err);
+            else
+                console.log('Connected to mongo database: Connect+');
+        });
 
-    console.log('Connected to mongo database: Connect+');
-    let LogosBucket = new mongoose.mongo.GridFSBucket(conn.db, { bucketName: 'Logos' });
-    let PostersBucket = new mongoose.mongo.GridFSBucket(conn.db, { bucketName: 'Posters' });
+    let LogosBucket = new mongoose.mongo.GridFSBucket(conn.connection.db, { bucketName: 'Logos' });
+    let PostersBucket = new mongoose.mongo.GridFSBucket(conn.connection.db, { bucketName: 'Posters' });
 
     return { LogosBucket, PostersBucket };
 })();

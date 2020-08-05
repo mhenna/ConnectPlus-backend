@@ -72,6 +72,15 @@ function retrieveFile(bucket, id, onFinish) {
     }
 }
 
+function deleteFile(bucket, id) {
+    try {
+        bucket.delete(new mongoose.mongo.ObjectID(id));
+        return true;
+    } catch (err) {
+        return false;
+    }
+}
+
 async function getFileMetadata(bucket, id) {
     let files = await bucket.find({ _id: new mongoose.mongo.ObjectID(id) }).toArray();
     return files[0];
@@ -80,5 +89,6 @@ async function getFileMetadata(bucket, id) {
 module.exports = {
     sendEmail,
     uploadFile,
-    retrieveFile
+    retrieveFile,
+    deleteFile
 }

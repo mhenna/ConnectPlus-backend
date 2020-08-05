@@ -56,17 +56,4 @@ module.exports = {
                 res.status(500).send(`Unexpected error occured: ${err}`);
         }
     },
-
-    register: async (req, res) => {
-        try {
-            let user = await Service.save(req.body);
-            delete user._doc['password'];
-            res.status(200).send({ user: user });
-        } catch (err) {
-            if (err.status)
-                res.status(err.status).send(err.message);
-            else
-                res.status(500).send(`Unexpected error occured: ${err}`);
-        }
-    }
 }
