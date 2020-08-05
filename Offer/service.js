@@ -24,6 +24,15 @@ async function findByName(name) {
     }
 }
 
+async function addLogoToOffer(id, logoId) {
+    try {
+        let offer = await Offer.findByIdAndUpdate(id, { $set: { logo: logoId } }, { new: true });
+        return offer;
+    } catch (err) {
+        throw (err);
+    }
+}
+
 async function uploadLogo(file, filename, extension) {
     const { LogosBucket } = await require('../app');
 
@@ -32,7 +41,7 @@ async function uploadLogo(file, filename, extension) {
             resolve(f);
         })
     });
-    
+
     let logoData = await Promise.resolve(x);
     return logoData;
 }
@@ -51,9 +60,20 @@ async function retrieveLogo(id) {
     return logo;
 }
 
+async function deleteLogo(id) {
+    const { LogosBucket } = await require('../app');
+
+    let x = new Promise((resolve, reject) => {
+        return Utils.deleteFile(LogosBucket, id);
+    })
+    let y = await Promise.resolve(x);
+    return y;
+}
 module.exports = {
     save,
     findByName,
     uploadLogo,
     retrieveLogo,
+    deleteLogo,
+    addLogoToOffer
 }
