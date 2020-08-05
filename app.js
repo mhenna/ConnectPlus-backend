@@ -12,8 +12,8 @@ const port = process.env.PORT;
 const userPath = require('./User/router');
 const offerPath = require('./Offer/router');
 const offerCategoryPath = require('./OfferCategory/router');
-const e = require('express');
-
+const eventPath = require("./Event/router");
+const Utils = require('./utils');
 
 app.use(bodyParser.json({ limit: '160mb', extended: true }));
 app.use(fileUpload());
@@ -22,6 +22,9 @@ app.use(expressjwt({ secret: config.secret, algorithms: ['RS256'] }).unless({ pa
 app.use('/user', userPath);
 app.use('/offers', offerPath);
 app.use('/offerCategories', offerCategoryPath)
+app.use('/event', eventPath);
+
+Utils.scheduleEventStatusUpdates(12, 09)
 
 app.use(function (err, req, res, next) {
     res.setHeader("Access-Control-Allow-Origin", "*");
@@ -48,7 +51,7 @@ process.once('SIGUSR2', function () {
 
 module.exports = (async function () {
     let conn = await mongoose.connect(process.env.MONGO_URL,
-        { useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex: true }, (err) => {
+        { useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex: true, useFindAndModify: false }, (err) => {
             if (err)
                 console.log(err);
             else
