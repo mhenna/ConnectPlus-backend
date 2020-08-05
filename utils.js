@@ -1,6 +1,8 @@
 const nodemailer = require('nodemailer');
 const mime = require('mime-types');
 const mongoose = require('mongoose');
+const cron = require('node-cron');
+const EventService = require('./Event/service');
 
 function sendEmail(to, subject, body) {
     /*Body format
@@ -86,9 +88,27 @@ async function getFileMetadata(bucket, id) {
     return files[0];
 }
 
+function scheduleEventStatusUpdates(hour, minute) {
+    cron.schedule(`00 ${minute} ${hour} * * 0-6`, async () => {
+        let events = await EventService.getEventsWithoutPosters();
+        let date = new Date().toISOString();
+        events.forEach(async event => {
+            let start = event.startDate.toISOString();
+            let end = event.endDate.toISOString();
+            if (date >= start && date <= end)
+                await event.updateOne({ status: 'Active' })
+            else if (date > end)
+                await event.updateOne({ status: 'Ended' })
+            else
+                await event.updateOne({ status: 'Scheduled' })
+        })
+    }, { timezone: 'Africa/Cairo' });
+}
+
 module.exports = {
     sendEmail,
     uploadFile,
     retrieveFile,
-    deleteFile
+    deleteFile,
+    scheduleEventStatusUpdates
 }
