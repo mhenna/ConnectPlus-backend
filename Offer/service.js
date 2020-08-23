@@ -75,6 +75,14 @@ async function findAll() {
     return offers;
 }
 
+async function getOffersNames() {
+    try {
+        let offers = await Offer.find({}).select("name");
+        return offers;
+    } catch (err) {
+        throw (err);
+    }
+}
 module.exports = {
     save,
     findByName,
@@ -82,5 +90,6 @@ module.exports = {
     retrieveLogo,
     deleteLogo,
     addLogoToOffer,
-    findAll
+    findAll,
+    getOffersNames
 }

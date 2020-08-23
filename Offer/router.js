@@ -10,5 +10,6 @@ router.route('/test').post(controller.testUpload);
 router.route('/test').get(controller.testRetrieve);
 router.route('/getByCategory/:name').get(controller.getOffersByCategory);
 router.route('/').get(controller.getOffers);
+router.route('/getOffersNames').get(controller.getOffersNames);
 
 module.exports = router
