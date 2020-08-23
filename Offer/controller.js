@@ -106,5 +106,16 @@ module.exports = {
         } catch (err) {
             console.log(err);
         }
+    },
+    getOffersNames: async (req, res) => {
+        try {
+            let offers = await Service.getOffersNames()
+            res.status(200).send(offers);
+        } catch (err) {
+            if (err.status)
+                res.status(err.status).send(err.message);
+            else
+                res.status(500).send(`Unexpected error occured: ${err}`);
+        }
     }
 }
