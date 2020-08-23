@@ -1,4 +1,7 @@
 const Service = require('./service');
+const CategoryService = require('../OfferCategory/service');
+const utils = require('../utils');
+const service = require('../OfferCategory/service');
 
 module.exports = {
 
@@ -23,7 +26,7 @@ module.exports = {
             }
 
             offer = await Service.addLogoToOffer(offer._id, logo._id);
-
+            await CategoryService.addOfferToCategory(req.body.category, offer._id);
             res.status(200).send({ offer: offer, status: "OK" });
 
         } catch (err) {
@@ -43,6 +46,46 @@ module.exports = {
             let offer = await Service.findByName(req.params.name);
             let logo = await Service.retrieveLogo(offer.logo);
             res.status(200).send({ offer: offer, logo: logo });
+        } catch (err) {
+            if (err.status)
+                res.status(err.status).send(err.message);
+            else
+                res.status(500).send(`Unexpected error occured: ${err}`);
+        }
+    },
+
+    getOffersByCategory: async (req, res) => {
+        try {
+            let categoryOffers = await CategoryService.findByNamePopulated(req.params.name);
+            let x = categoryOffers.offers.map(async offer => {
+                let logo = await Service.retrieveLogo(offer.logo);
+                return { offer, logo };
+            })
+
+            let offers = await Promise.all(x);
+            res.status(200).send(offers);
+        } catch (err) {
+            if (err.status)
+                res.status(err.status).send(err.message);
+            else
+                res.status(500).send(`Unexpected error occured: ${err}`);
+        }
+    },
+
+    getOffers: async (req, res) => {
+        try {
+            let cats = await CategoryService.findAll();
+            let y = cats.map(async cat => {
+                let x = cat.offers.map(async offer => {
+                    let logo = await Service.retrieveLogo(offer.logo);
+                    offer._doc.logo = logo;
+                    return offer;
+                })
+                await Promise.all(x);
+                return cats;
+            })
+            await Promise.all(y);
+            res.status(200).send(cats);
         } catch (err) {
             if (err.status)
                 res.status(err.status).send(err.message);

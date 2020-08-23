@@ -23,6 +23,17 @@ async function findByName(name) {
     }
 }
 
+async function findByNamePopulated(name) {
+    try {
+        let offerCat = await (await OfferCategory.findOne({ name: name }).populate('offers')).execPopulate();
+        if (!offerCat)
+            throw ({ status: 404, message: 'Offer Category not found' })
+        return offerCat;
+    } catch (err) {
+        throw (err);
+    }
+}
+
 async function findAll() {
     try {
         let offerCats = await OfferCategory.find({}).populate({
@@ -36,8 +47,19 @@ async function findAll() {
     }
 }
 
+async function addOfferToCategory(name, offer) {
+    try {
+        let offerCat = await OfferCategory.updateOne({name: name}, { $push: { offers: offer._id } }, { new: true });
+        return offerCat;
+    } catch (err) {
+        throw (err);
+    }
+}
+
 module.exports = {
     save,
     findByName,
-    findAll
+    findAll,
+    findByNamePopulated,
+    addOfferToCategory
 }

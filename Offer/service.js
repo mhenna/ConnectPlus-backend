@@ -69,11 +69,18 @@ async function deleteLogo(id) {
     let y = await Promise.resolve(x);
     return y;
 }
+
+async function findAll() {
+    let offers = await Offer.find({});
+    return offers;
+}
+
 module.exports = {
     save,
     findByName,
     uploadLogo,
     retrieveLogo,
     deleteLogo,
-    addLogoToOffer
+    addLogoToOffer,
+    findAll
 }

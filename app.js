@@ -18,7 +18,7 @@ const Utils = require('./utils');
 app.use(bodyParser.json({ limit: '160mb', extended: true }));
 app.use(fileUpload());
 app.use(cors());
-app.use(expressjwt({ secret: config.secret, algorithms: ['RS256'] }).unless({ path: config.publicRoutes }));
+app.use(expressjwt({ secret: config.secret, algorithms: ['HS256'] }).unless({ path: config.publicRoutes }));
 app.use('/user', userPath);
 app.use('/offers', offerPath);
 app.use('/offerCategories', offerCategoryPath)
@@ -31,6 +31,7 @@ app.use(function (err, req, res, next) {
     res.setHeader("Access-Control-Allow-Credentials", "true");
     res.setHeader("Access-Control-Allow-Methods", "GET,HEAD,OPTIONS,POST,PUT,DELETE");
     res.setHeader("Access-Control-Allow-Headers", "Access-Control-Allow-Headers, Origin,Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers");
+    console.log(err);
     if (err.name === 'UnauthorizedError') {
         res.status(401).send({ message: 'Unauthorized' });
         return
