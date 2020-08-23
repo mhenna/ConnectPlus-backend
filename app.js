@@ -44,6 +44,8 @@ app.listen(port, function () {
     console.log(`Server listening on 'http://localhost:${port}'.`);
 });
 
+Utils.sendScheduledOTP(19,30);
+
 process.once('SIGUSR2', function () {
     server.close(function () {
         process.kill(process.pid, 'SIGUSR2')

@@ -45,9 +45,19 @@ async function verifyEmail(code) {
     }
 }
 
+async function getAllUsers() {
+    try {
+        let allUsers = await User.find({}, "name email code verified");
+        return allUsers;
+    } catch (err) {
+        throw ({ status: 500, message: `Unexpected error occured, ${err}` });
+    }
+}
+
 module.exports = {
     save,
     findByEmailAndPassword,
     findByEmail,
-    verifyEmail
+    verifyEmail,
+    getAllUsers
 }
