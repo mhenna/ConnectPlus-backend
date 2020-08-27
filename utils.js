@@ -3,6 +3,8 @@ const mime = require('mime-types');
 const mongoose = require('mongoose');
 const cron = require('node-cron');
 const EventService = require('./Event/service');
+const OTP = require('otp-generator');
+const UserService = require('./User/service');
 
 function sendEmail(to, subject, body) {
     /*Body format
@@ -105,10 +107,28 @@ function scheduleEventStatusUpdates(hour, minute) {
     }, { timezone: 'Africa/Cairo' });
 }
 
+function sendScheduledOTP(hour, minute) {
+    //cronjob exp to send OTP at 00:00 on day-of-month 1 in every 3rd month."
+    cron.schedule(`${minute} ${hour} 1 */3 *`, async () => {
+        let users = await UserService.getAllUsers();
+        users.forEach(async user => {
+            await user.updateOne({ verified: false });
+            let otp = OTP.generate(6, { digits: true, alphabets: true, upperCase: true, specialChars: true });
+            await user.updateOne({ code: otp });
+            sendEmail(user.email, 'Verify Registration',
+                `Hello ${user.name},\n
+                Please click on the following link to verify your email.\n
+                Here is your verification code: ${otp}
+                ${process.env.verificationURL}/${user.email}/${otp}`);
+        })
+    }, { timezone: 'Africa/Cairo' });
+}
+
 module.exports = {
     sendEmail,
     uploadFile,
     retrieveFile,
     deleteFile,
-    scheduleEventStatusUpdates
+    scheduleEventStatusUpdates,
+    sendScheduledOTP
 }
