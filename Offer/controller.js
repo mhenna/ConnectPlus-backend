@@ -7,7 +7,7 @@ module.exports = {
 
     addOffer: async (req, res) => {
         try {
-            if (!req.body.name || !req.body.expiration || !req.body.location || !req.body.contact || !req.body.details)
+            if (!req.body.name || !req.body.expiration || !req.body.location || !req.body.contact || !req.body.details || req.body.startDate)
                 res.status(400).send({ message: "Missing parameter!" })
 
             let extension = JSON.parse(JSON.stringify(req.body.extension));
