@@ -13,6 +13,7 @@ const userPath = require('./User/router');
 const offerPath = require('./Offer/router');
 const offerCategoryPath = require('./OfferCategory/router');
 const eventPath = require("./Event/router");
+const profilePath = require("./Profile/router")
 const Utils = require('./utils');
 
 app.use(bodyParser.json({ limit: '160mb', extended: true }));
@@ -23,6 +24,7 @@ app.use('/user', userPath);
 app.use('/offers', offerPath);
 app.use('/offerCategories', offerCategoryPath)
 app.use('/event', eventPath);
+app.use('/profile', profilePath)
 
 Utils.scheduleEventStatusUpdates(12, 09)
 
@@ -44,7 +46,7 @@ app.listen(port, function () {
     console.log(`Server listening on 'http://localhost:${port}'.`);
 });
 
-Utils.sendScheduledOTP(19,30);
+Utils.sendScheduledOTP(19, 30);
 
 process.once('SIGUSR2', function () {
     server.close(function () {
