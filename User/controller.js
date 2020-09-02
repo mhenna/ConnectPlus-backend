@@ -56,4 +56,13 @@ module.exports = {
                 res.status(500).send(`Unexpected error occured: ${err}`);
         }
     },
+
+    validateToken: async (req, res) => {
+        try {
+            var decoded = jwt.verify(req.headers['authorization'].split(' ')[1], config.secret);
+            res.status(200).send(decoded);
+        } catch (err) {
+            res.status(500).send(`Unexpected error occured: ${err}`);
+        }
+    }
 }

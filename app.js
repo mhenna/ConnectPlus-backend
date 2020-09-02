@@ -13,6 +13,7 @@ const userPath = require('./User/router');
 const offerPath = require('./Offer/router');
 const offerCategoryPath = require('./OfferCategory/router');
 const eventPath = require("./Event/router");
+const profilePath = require("./Profile/router")
 const Utils = require('./utils');
 
 app.use(bodyParser.json({ limit: '160mb', extended: true }));
@@ -23,6 +24,7 @@ app.use('/user', userPath);
 app.use('/offers', offerPath);
 app.use('/offerCategories', offerCategoryPath)
 app.use('/event', eventPath);
+app.use('/profile', profilePath)
 
 Utils.scheduleEventStatusUpdates(12, 09)
 
@@ -31,7 +33,6 @@ app.use(function (err, req, res, next) {
     res.setHeader("Access-Control-Allow-Credentials", "true");
     res.setHeader("Access-Control-Allow-Methods", "GET,HEAD,OPTIONS,POST,PUT,DELETE");
     res.setHeader("Access-Control-Allow-Headers", "Access-Control-Allow-Headers, Origin,Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers");
-    console.log(err);
     if (err.name === 'UnauthorizedError') {
         res.status(401).send({ message: 'Unauthorized' });
         return
@@ -44,7 +45,7 @@ app.listen(port, function () {
     console.log(`Server listening on 'http://localhost:${port}'.`);
 });
 
-Utils.sendScheduledOTP(19,30);
+Utils.sendScheduledOTP(19, 30);
 
 process.once('SIGUSR2', function () {
     server.close(function () {
