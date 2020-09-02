@@ -63,6 +63,6 @@ module.exports = (async function () {
 
     let LogosBucket = new mongoose.mongo.GridFSBucket(conn.connection.db, { bucketName: 'Logos' });
     let PostersBucket = new mongoose.mongo.GridFSBucket(conn.connection.db, { bucketName: 'Posters' });
-
-    return { LogosBucket, PostersBucket };
+    let AttachmentsBucket = new mongoose.mongo.GridFSBucket(conn.connection.db, { bucketName: 'Attachments' });
+    return { LogosBucket, PostersBucket, AttachmentsBucket };
 })();

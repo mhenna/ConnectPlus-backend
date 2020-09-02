@@ -22,7 +22,14 @@ const OfferSchema = new mongoose.Schema({
         required: true,
         unique: true
     },
+    discount: {
+        type: String, 
+        required: true,
+    },
     logo: {
+        type: mongoose.Schema.Types.ObjectId,
+    },
+    attachment: {
         type: mongoose.Schema.Types.ObjectId,
     }
 });
