@@ -2,7 +2,6 @@ const nodemailer = require('nodemailer');
 const mime = require('mime-types');
 const mongoose = require('mongoose');
 const cron = require('node-cron');
-const EventService = require('./Event/service');
 const OTP = require('otp-generator');
 const UserService = require('./User/service');
 
@@ -91,6 +90,7 @@ async function getFileMetadata(bucket, id) {
 }
 
 function scheduleEventStatusUpdates(hour, minute) {
+    const EventService = require('./Event/service');
     cron.schedule(`00 ${minute} ${hour} * * 0-6`, async () => {
         let events = await EventService.getEventsWithoutPosters();
         let date = new Date().toISOString();
