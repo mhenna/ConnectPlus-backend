@@ -31,6 +31,11 @@ const OfferSchema = new mongoose.Schema({
     },
     attachment: {
         type: mongoose.Schema.Types.ObjectId,
+    },
+},
+{
+    timestamps: {
+        createdAt: "createdAt"
     }
 });
 
