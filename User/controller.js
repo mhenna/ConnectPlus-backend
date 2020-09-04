@@ -13,7 +13,6 @@ module.exports = {
             delete user._doc.password;
             delete user._doc.code;
             if (user.verified) {
-                console.log("hey", user.profile)
                 let profile = await ProfileService.findById(user.profile)
                 var token = jwt.sign({ user: user, role: 'user', profile: profile }, config.secret, { expiresIn: '1h' })
                 res.status(200).send({ "user": user, 'profile': profile, "token": token, "status": "OK" });
