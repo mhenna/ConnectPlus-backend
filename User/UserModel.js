@@ -22,10 +22,14 @@ const UserSchema = new mongoose.Schema({
     verified: {
         type: Boolean,
         required: true,
-        default: false
+        default: true
     },
     code: {
         type: String,
+    },
+    profile: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Profile"
     }
 });
 
