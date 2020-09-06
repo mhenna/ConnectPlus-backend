@@ -18,9 +18,9 @@ const ProfileSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Event'
     }],
-    carPlates: [{
+    carPlate: {
         type: String
-    }]
+    }
 });
 
 module.export = mongoose.model('Profile', ProfileSchema).init()
