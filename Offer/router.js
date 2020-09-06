@@ -13,5 +13,6 @@ router.route('/testAttachment').get(controller.testRetrieveAttachment);
 router.route('/getByCategory/:name').get(controller.getOffersByCategory);
 router.route('/').get(controller.getOffers);
 router.route('/getOffersNames').get(controller.getOffersNames);
+router.route('/recent').get(controller.getRecentOffers);
 
 module.exports = router

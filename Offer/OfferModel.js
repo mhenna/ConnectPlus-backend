@@ -23,7 +23,7 @@ const OfferSchema = new mongoose.Schema({
         unique: true
     },
     discount: {
-        type: String, 
+        type: String,
         required: true,
     },
     logo: {
@@ -33,10 +33,10 @@ const OfferSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
     },
 },
-{
-    timestamps: {
-        createdAt: "createdAt"
-    }
-});
+    {
+        timestamps: {
+            createdAt: "createdAt"
+        }
+    });
 
 module.export = mongoose.model('Offer', OfferSchema).init()

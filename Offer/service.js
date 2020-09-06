@@ -69,6 +69,7 @@ async function deleteLogo(id) {
     let y = await Promise.resolve(x);
     return y;
 }
+
 async function addAttachmentToOffer(id, attachmentId) {
     try {
         let offer = await Offer.findByIdAndUpdate(id, { $set: { attachment: attachmentId } }, { new: true });
@@ -90,6 +91,7 @@ async function uploadAttachment(file, filename, extension) {
     let attachmentData = await Promise.resolve(x);
     return attachmentData;
 }
+
 async function retrieveAttachment(id) {
     const { AttachmentsBucket } = await require('../app');
 
@@ -116,6 +118,18 @@ async function getOffersNames() {
         throw (err);
     }
 }
+
+async function getFourRecentOffers() {
+    let offers = await Offer.find().limit(4).sort({createdAt: -1});
+    let x = offers.map(async offer => {
+        offer._doc.logo = await retrieveLogo(offer.logo);
+        return offer;
+    })
+
+    await Promise.all(x);
+    return offers;
+}
+
 module.exports = {
     save,
     findByName,
@@ -127,5 +141,6 @@ module.exports = {
     uploadAttachment,
     retrieveAttachment,
     findAll,
-    getOffersNames
+    getOffersNames,
+    getFourRecentOffers
 }

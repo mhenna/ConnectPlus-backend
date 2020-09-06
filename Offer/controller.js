@@ -143,5 +143,17 @@ module.exports = {
             else
                 res.status(500).send(`Unexpected error occured: ${err}`);
         }
+    },
+
+    getRecentOffers: async (req, res) => {
+        try {
+            let offers = await Service.getFourRecentOffers();
+            res.status(200).send(offers);
+        } catch (err) {
+            if (err.status)
+                res.status(err.status).send(err.message);
+            else
+                res.status(500).send(`Unexpected error occured: ${err}`);
+        }
     }
 }

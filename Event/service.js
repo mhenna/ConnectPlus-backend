@@ -59,6 +59,17 @@ async function getEvents() {
     return events;
 }
 
+async function getFourRecentEvents() {
+    let events = await Event.find().limit(4).sort({startDate: -1});
+    let x = events.map(async event => {
+        event._doc.poster = await retrievePoster(event.poster);
+        return event;
+    })
+
+    await Promise.all(x);
+    return events;
+}
+
 async function getEventsWithoutPosters() {
     let events = await Event.find();
     return events;
@@ -70,5 +81,6 @@ module.exports = {
     uploadPoster,
     retrievePoster,
     getEvents,
+    getFourRecentEvents,
     getEventsWithoutPosters
 }
