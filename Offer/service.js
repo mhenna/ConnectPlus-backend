@@ -69,6 +69,39 @@ async function deleteLogo(id) {
     let y = await Promise.resolve(x);
     return y;
 }
+async function addAttachmentToOffer(id, attachmentId) {
+    try {
+        let offer = await Offer.findByIdAndUpdate(id, { $set: { attachment: attachmentId } }, { new: true });
+        return offer;
+    } catch (err) {
+        throw (err);
+    }
+}
+
+async function uploadAttachment(file, filename, extension) {
+    const { AttachmentsBucket } = await require('../app');
+
+    let x = new Promise((resolve, reject) => {
+        Utils.uploadFile(AttachmentsBucket, file, filename, extension, function onFinish(f) {
+            resolve(f);
+        })
+    });
+
+    let attachmentData = await Promise.resolve(x);
+    return attachmentData;
+}
+async function retrieveAttachment(id) {
+    const { AttachmentsBucket } = await require('../app');
+
+    let x = new Promise((resolve, reject) => {
+        Utils.retrieveFile(AttachmentsBucket, id, function onFinish(f, metadata) {
+            let file = { metadata: metadata, fileData: f };
+            resolve(file);
+        });
+    })
+    let attachment = await Promise.resolve(x);
+    return attachment;
+}
 
 async function findAll() {
     let offers = await Offer.find({});
@@ -90,6 +123,9 @@ module.exports = {
     retrieveLogo,
     deleteLogo,
     addLogoToOffer,
+    addAttachmentToOffer,
+    uploadAttachment,
+    retrieveAttachment,
     findAll,
     getOffersNames
 }

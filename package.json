@@ -23,6 +23,7 @@
     "mongoose-beautiful-unique-validation": "^7.1.1",
     "node-cron": "^2.0.3",
     "nodemailer": "^6.4.10",
+    "nodemon": "^2.0.4",
     "otp-generator": "^1.1.0"
   }
 }

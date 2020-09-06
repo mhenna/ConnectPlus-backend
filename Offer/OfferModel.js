@@ -22,12 +22,20 @@ const OfferSchema = new mongoose.Schema({
         required: true,
         unique: true
     },
+    discount: {
+        type: String, 
+        required: true,
+    },
     logo: {
         type: mongoose.Schema.Types.ObjectId,
     },
-    startDate: {
-        type: Date,
-        required: true
+    attachment: {
+        type: mongoose.Schema.Types.ObjectId,
+    },
+},
+{
+    timestamps: {
+        createdAt: "createdAt"
     }
 });
 
