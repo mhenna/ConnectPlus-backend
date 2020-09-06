@@ -24,6 +24,10 @@ const OfferSchema = new mongoose.Schema({
     },
     logo: {
         type: mongoose.Schema.Types.ObjectId,
+    },
+    startDate: {
+        type: Date,
+        required: true
     }
 });
 
