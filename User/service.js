@@ -54,10 +54,22 @@ async function getAllUsers() {
     }
 }
 
+async function addProfileToUser(userId, profileId) {
+    try {
+        let user = await User.findOneAndUpdate({ _id: userId }, { profile: profileId })
+        if (!user)
+            throw ({ status: 404, message: 'User with this id does not exist' });
+        return user
+    } catch (err) {
+        throw (err);
+    }
+}
+
 module.exports = {
     save,
     findByEmailAndPassword,
     findByEmail,
     verifyEmail,
-    getAllUsers
+    getAllUsers,
+    addProfileToUser
 }

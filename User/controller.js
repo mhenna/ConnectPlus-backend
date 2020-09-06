@@ -3,6 +3,7 @@ const jwt = require('jsonwebtoken');
 const config = require('../config');
 const Utils = require('../utils');
 const OTP = require('otp-generator');
+const ProfileService = require('../Profile/service')
 
 module.exports = {
 
@@ -12,8 +13,9 @@ module.exports = {
             delete user._doc.password;
             delete user._doc.code;
             if (user.verified) {
-                var token = jwt.sign({ user: user, role: 'user' }, config.secret, { expiresIn: '1h' })
-                res.status(200).send({ "user": user, "token": token, "status": "OK" });
+                let profile = await ProfileService.findById(user.profile)
+                var token = jwt.sign({ user: user, role: 'user', profile: profile }, config.secret, { expiresIn: '1h' })
+                res.status(200).send({ "user": user, 'profile': profile, "token": token, "status": "OK" });
             } else
                 throw ({ status: 409, message: 'Your email has not been verified yet. Please verify your email and retry logging in.' })
         } catch (err) {
