@@ -49,7 +49,16 @@ async function findAll() {
 
 async function addOfferToCategory(name, offer) {
     try {
-        let offerCat = await OfferCategory.updateOne({name: name}, { $push: { offers: offer._id } }, { new: true });
+        let offerCat = await OfferCategory.updateOne({ name: name }, { $push: { offers: offer._id } }, { new: true });
+        return offerCat;
+    } catch (err) {
+        throw (err);
+    }
+}
+
+async function getOfferCategory(offerId) {
+    try {
+        let offerCat = await OfferCategory.findOne({ offers: { $in: offerId } }).select("name");
         return offerCat;
     } catch (err) {
         throw (err);
@@ -61,5 +70,6 @@ module.exports = {
     findByName,
     findAll,
     findByNamePopulated,
-    addOfferToCategory
+    addOfferToCategory,
+    getOfferCategory
 }

@@ -1,7 +1,5 @@
 const Service = require('./service');
 const CategoryService = require('../OfferCategory/service');
-const utils = require('../utils');
-const service = require('../OfferCategory/service');
 
 module.exports = {
 
@@ -148,6 +146,11 @@ module.exports = {
     getRecentOffers: async (req, res) => {
         try {
             let offers = await Service.getFourRecentOffers();
+            let x = offers.map(async offer => {
+                offer._doc.category = await CategoryService.getOfferCategory(offer._id);
+                return offer;
+            });
+            await Promise.all(x);
             res.status(200).send(offers);
         } catch (err) {
             if (err.status)
