@@ -34,8 +34,20 @@ async function getProfile(phoneNumber) {
     }
 }
 
+async function findById(id) {
+    try {
+        let profile = await Profile.findById(id)
+        if (!profile)
+            throw ({ status: 404, message: 'Profile not found' })
+        return profile;
+    } catch (err) {
+        throw (err);
+    }
+}
+
 module.exports = {
     save,
     editProfile,
-    getProfile
+    getProfile,
+    findById
 }

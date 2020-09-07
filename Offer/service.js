@@ -70,6 +70,41 @@ async function deleteLogo(id) {
     return y;
 }
 
+async function addAttachmentToOffer(id, attachmentId) {
+    try {
+        let offer = await Offer.findByIdAndUpdate(id, { $set: { attachment: attachmentId } }, { new: true });
+        return offer;
+    } catch (err) {
+        throw (err);
+    }
+}
+
+async function uploadAttachment(file, filename, extension) {
+    const { AttachmentsBucket } = await require('../app');
+
+    let x = new Promise((resolve, reject) => {
+        Utils.uploadFile(AttachmentsBucket, file, filename, extension, function onFinish(f) {
+            resolve(f);
+        })
+    });
+
+    let attachmentData = await Promise.resolve(x);
+    return attachmentData;
+}
+
+async function retrieveAttachment(id) {
+    const { AttachmentsBucket } = await require('../app');
+
+    let x = new Promise((resolve, reject) => {
+        Utils.retrieveFile(AttachmentsBucket, id, function onFinish(f, metadata) {
+            let file = { metadata: metadata, fileData: f };
+            resolve(file);
+        });
+    })
+    let attachment = await Promise.resolve(x);
+    return attachment;
+}
+
 async function findAll() {
     let offers = await Offer.find({});
     return offers;
@@ -83,6 +118,18 @@ async function getOffersNames() {
         throw (err);
     }
 }
+
+async function getFourRecentOffers() {
+    let offers = await Offer.find().limit(4).sort({createdAt: -1});
+    let x = offers.map(async offer => {
+        offer._doc.logo = await retrieveLogo(offer.logo);
+        return offer;
+    })
+
+    await Promise.all(x);
+    return offers;
+}
+
 module.exports = {
     save,
     findByName,
@@ -90,6 +137,10 @@ module.exports = {
     retrieveLogo,
     deleteLogo,
     addLogoToOffer,
+    addAttachmentToOffer,
+    uploadAttachment,
+    retrieveAttachment,
     findAll,
-    getOffersNames
+    getOffersNames,
+    getFourRecentOffers
 }
