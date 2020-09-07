@@ -1,13 +1,44 @@
 const mongoose = require('mongoose');
 require('./EventModel');
 const Event = mongoose.model('Event');
-const Utils = require('../utils');
+
 
 async function save(event) {
     try {
         let e = new Event(event);
         await e.save();
         return e;
+    } catch (err) {
+        throw (err);
+    }
+}
+
+async function findByName(name) {
+    try {
+        let event = await Event.findOne({ name: name });
+        if (!event)
+            throw ({ status: 404, message: 'Event not found' })
+        return event;
+    } catch (err) {
+        throw (err);
+    }
+}
+
+async function findByERG(ERG) {
+    try {
+        let events = await Event.find({ ERG: ERG });
+        
+        if (!events)
+        throw ({ status: 404, message: 'Event not found' })
+
+        let x = events.map(async event => {
+            event._doc.poster = await retrievePoster(event.poster);
+            return event;
+        })
+    
+        await Promise.all(x);
+        return events;
+
     } catch (err) {
         throw (err);
     }
@@ -36,8 +67,8 @@ async function uploadPoster(file, filename, extension) {
 }
 
 async function retrievePoster(id) {
+    const Utils = require('../utils');
     const { PostersBucket } = await require('../app');
-
     let x = new Promise((resolve, reject) => {
         Utils.retrieveFile(PostersBucket, id, function onFinish(f, metadata) {
             let file = { metadata: metadata, fileData: f };
@@ -77,6 +108,8 @@ async function getEventsWithoutPosters() {
 
 module.exports = {
     save,
+    findByName,
+    findByERG,
     addPosterToEvent,
     uploadPoster,
     retrievePoster,
