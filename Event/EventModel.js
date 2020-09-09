@@ -7,8 +7,9 @@ const EventSchema = new mongoose.Schema({
         unique: true
     },
     ERG: {
-        type: String,
-        required: true,
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "ERG",
+        required:true
     },
     startDate: {
         type: Date,

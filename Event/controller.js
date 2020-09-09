@@ -1,10 +1,13 @@
 const Service = require('./service');
-
+const ERGService = require('../ERG/service');
+const mongoose = require('mongoose')
 module.exports = {
     addEvent: async (req, res) => {
         try {
             let extension = JSON.parse(JSON.stringify(req.body.extension));
             delete req.body.extension;
+            let ERGid = await ERGService.findByName(req.body.ERG)
+            req.body.ERG = mongoose.mongo.ObjectID(ERGid._id)
             let event, poster;
             try {
                 event = await Service.save(req.body);
@@ -43,7 +46,9 @@ module.exports = {
 
     getEventsByERG: async (req, res) => {
         try {
-            let events = await Service.findByERG(req.params.erg);
+            let ERGid = await ERGService.findByName(req.params.erg)
+            ERGid = mongoose.mongo.ObjectID(ERGid._id)
+            let events = await Service.findByERG(ERGid);
             res.status(200).send(events);
         } catch (err) {
             if (err.status)

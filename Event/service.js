@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 require('./EventModel');
 const Event = mongoose.model('Event');
-
+const Utils = require('../utils');
 
 async function save(event) {
     try {
@@ -15,7 +15,7 @@ async function save(event) {
 
 async function findByName(name) {
     try {
-        let event = await Event.findOne({ name: name });
+        let event = await Event.findOne({ name: name }).populate("ERG");
         if (!event)
             throw ({ status: 404, message: 'Event not found' })
         return event;
@@ -26,7 +26,7 @@ async function findByName(name) {
 
 async function findByERG(ERG) {
     try {
-        let events = await Event.find({ ERG: ERG });
+        let events = await Event.find({ ERG: ERG }).populate("ERG");
         
         if (!events)
         throw ({ status: 404, message: 'Event not found' })
@@ -80,7 +80,7 @@ async function retrievePoster(id) {
 }
 
 async function getEvents() {
-    let events = await Event.find();
+    let events = await (await Event.find().populate("ERG"));
     let x = events.map(async event => {
         event._doc.poster = await retrievePoster(event.poster);
         return event;
@@ -91,7 +91,7 @@ async function getEvents() {
 }
 
 async function getFourRecentEvents() {
-    let events = await Event.find().limit(4).sort({startDate: -1});
+    let events = await Event.find().populate("ERG").limit(4).sort({startDate: -1});
     let x = events.map(async event => {
         event._doc.poster = await retrievePoster(event.poster);
         return event;
@@ -102,7 +102,7 @@ async function getFourRecentEvents() {
 }
 
 async function getEventsWithoutPosters() {
-    let events = await Event.find();
+    let events = await( await Event.find().populate("ERG")).execPopulate();
     return events;
 }
 
