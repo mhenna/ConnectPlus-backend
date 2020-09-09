@@ -10,6 +10,7 @@ const fileUpload = require('express-fileupload');
 const config = require('./config');
 const port = process.env.PORT;
 const userPath = require('./User/router');
+const ERGPath = require('./ERG/router');
 const offerPath = require('./Offer/router');
 const offerCategoryPath = require('./OfferCategory/router');
 const eventPath = require("./Event/router");
@@ -21,6 +22,7 @@ app.use(fileUpload());
 app.use(cors());
 app.use(expressjwt({ secret: config.secret, algorithms: ['HS256'] }).unless({ path: config.publicRoutes }));
 app.use('/user', userPath);
+app.use('/ERG', ERGPath);
 app.use('/offers', offerPath);
 app.use('/offerCategories', offerCategoryPath)
 app.use('/event', eventPath);
@@ -54,13 +56,7 @@ process.once('SIGUSR2', function () {
 })
 
 module.exports = (async function () {
-    let conn = await mongoose.connect(process.env.MONGO_URL,
-        { useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex: true, useFindAndModify: false }, (err) => {
-            if (err)
-                console.log(err);
-            else
-                console.log('Connected to mongo database: Connect+');
-        });
+    let conn = await mongoose.connect(process.env.MONGO_URL, { useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex: true, useFindAndModify: false })
 
     let LogosBucket = new mongoose.mongo.GridFSBucket(conn.connection.db, { bucketName: 'Logos' });
     let PostersBucket = new mongoose.mongo.GridFSBucket(conn.connection.db, { bucketName: 'Posters' });
