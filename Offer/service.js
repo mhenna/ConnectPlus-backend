@@ -120,7 +120,7 @@ async function getOffersNames() {
 }
 
 async function getFourRecentOffers() {
-    let offers = await Offer.find().limit(4).sort({createdAt: -1});
+    let offers = await Offer.find().limit(4).sort({expiration: -1});
     let x = offers.map(async offer => {
         offer._doc.logo = await retrieveLogo(offer.logo);
         return offer;
