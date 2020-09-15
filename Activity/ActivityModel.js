@@ -26,6 +26,9 @@ const ActivitySchema = new mongoose.Schema({
         type: String,
         required: true
     },
+    poster: {
+        type: mongoose.Schema.Types.ObjectId,
+    }
 });
 
 module.export = mongoose.model('Activity', ActivitySchema).init()
