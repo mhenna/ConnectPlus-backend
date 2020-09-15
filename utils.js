@@ -4,6 +4,47 @@ const mongoose = require('mongoose');
 const cron = require('node-cron');
 const OTP = require('otp-generator');
 const UserService = require('./User/service');
+const RRule= require('rrule').RRule
+
+function getActivityDates(recurrence, day ,startDate, endDate) {
+    var rule;
+    if(recurrence == 'daily')
+      {
+         rule = new RRule({
+            freq: RRule.DAILY,
+            dtstart: new Date(startDate),
+            until: new Date(endDate)
+        }).all()
+
+      }else if(recurrence == 'weekly' || recurrence=='biweekly')
+       {
+         rule = new RRule({
+            freq: RRule.WEEKLY,
+            interval: recurrence == 'biweekly'? 2 : 1,
+            byweekday: day,
+            dtstart: new Date(startDate),
+            until: new Date(endDate)
+        }).all()
+
+    }else if(recurrence =='monthly')
+    {
+         rule = new RRule({
+            freq: RRule.MONTHLY,
+            interval: 1,
+            bymonthday: day,
+            dtstart: new Date(startDate),
+            until: new Date(endDate)
+        }).all()
+    }else{
+        throw ('Recurrence Mismatch');
+    }
+       
+        rule.forEach(function(item, index, array){
+            array[index] = item.toISOString();
+       });
+
+        return rule;
+    }
 
 function sendEmail(to, subject, body) {
     /*Body format
@@ -130,5 +171,6 @@ module.exports = {
     retrieveFile,
     deleteFile,
     scheduleEventStatusUpdates,
-    sendScheduledOTP
+    sendScheduledOTP,
+    getActivityDates
 }

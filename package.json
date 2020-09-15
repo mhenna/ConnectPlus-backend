@@ -24,6 +24,7 @@
     "node-cron": "^2.0.3",
     "nodemailer": "^6.4.10",
     "nodemon": "^2.0.4",
-    "otp-generator": "^1.1.0"
+    "otp-generator": "^1.1.0",
+    "rrule": "^2.6.6"
   }
 }

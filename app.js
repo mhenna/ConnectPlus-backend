@@ -14,6 +14,7 @@ const ERGPath = require('./ERG/router');
 const offerPath = require('./Offer/router');
 const offerCategoryPath = require('./OfferCategory/router');
 const eventPath = require("./Event/router");
+const activityPath = require("./Activity/router");
 const profilePath = require("./Profile/router")
 const Utils = require('./utils');
 
@@ -26,6 +27,7 @@ app.use('/ERG', ERGPath);
 app.use('/offers', offerPath);
 app.use('/offerCategories', offerCategoryPath)
 app.use('/event', eventPath);
+app.use('/activity', activityPath)
 app.use('/profile', profilePath)
 
 Utils.scheduleEventStatusUpdates(12, 09)
